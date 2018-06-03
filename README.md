@@ -1,8 +1,8 @@
 # text_generator
 natural language generation using keras LSTM trained on twitter
-![](https://raw.githubusercontent.com/mohammedterry/text_generator/master/training.png)
+![](https://raw.githubusercontent.com/mohammedterry/text_generator/master/example1.png)
 ...
-![](https://raw.githubusercontent.com/mohammedterry/text_generator/master/training2.png)
+![](https://raw.githubusercontent.com/mohammedterry/text_generator/master/example2.png)
 ...
-![](https://raw.githubusercontent.com/mohammedterry/text_generator/master/training3.png)
+![](https://raw.githubusercontent.com/mohammedterry/text_generator/master/example3.png)
 ...
