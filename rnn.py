@@ -42,6 +42,8 @@ def indices_to_chars(i):
     return chr(i + 96)
 
 def chars_to_indices(ch):
+    if ch == ' ':
+        return 0
     return ord(ch) - 96
 
 # clean input text
