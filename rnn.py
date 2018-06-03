@@ -6,12 +6,12 @@ from keras.optimizers import RMSprop
 def clean(text):
     return ' '.join(''.join([ch.lower() if 96 < ord(ch) < 123 else ' ' for ch in text.lower()]).split())
 
-def window_transform_text(text, window_size=100, step_size=5):
+def window_transform_text(text, window_size, step_size=5):
     inputs = [text[i:i+window_size] for i in range(0,len(text)-window_size,step_size)]
     outputs = [text[i+window_size] for i in range(0,len(text)-window_size,step_size)]
     return inputs,outputs
 
-def encode_io_pairs(text,window_size=100,step_size=5):
+def encode_io_pairs(text,window_size,step_size=5):
     n = 28
     inputs, outputs = window_transform_text(text,window_size,step_size)
     X = np.zeros((len(inputs), window_size, n), dtype=np.bool)
@@ -48,24 +48,22 @@ def chars_to_indices(ch):
     return ord(ch) - 96
 
 # CLEAN INPUT TEXT
-text = clean(open('twitter.txt').read())
-print ("\n{} ...\n\nthis corpus has: \n\t{} characters in total\n\t{} unique characters\n\t\t{}".format(text[:100],len(text),len(set(text)),sorted(list(set(text)))))
-X,y = encode_io_pairs(text[:100000])
-# TRAIN LSTM
 n = 28
+window_size = 15
+text = clean(open('twitter.txt').read())[:100000]
+print ("\n{} ...\n\nthis corpus has: \n\t{} characters in total\n\t{} unique characters\n\t\t{}".format(text[:100],len(text),len(set(text)),sorted(list(set(text)))))
+X,y = encode_io_pairs(text,window_size)
+# CREATE LSTM
 model = Sequential()
 model.add(LSTM(200,input_shape=(100, n )))
 model.add(Dense(n))
 model.add(Activation("softmax"))
 model.compile(loss='categorical_crossentropy',optimizer=RMSprop(lr=.001,rho=.9,epsilon=1e-08,decay=.0))
-model.fit(X, y, batch_size=500, epochs=30, verbose=1)
-model.save_weights('best_RNN_large_textdata_weights.hdf5')
-# GENERATE TEXT
-start_inds = [1,4,7]
-window_size = 100
-with open('RNN_output.txt', 'w') as f:
-    model.load_weights('best_RNN_large_textdata_weights.hdf5')
-    for s in start_inds:
-        input_chars = text[s: s + window_size]
-        predict_input = predict_next_chars(model,input_chars,num_to_predict = 100)
-        f.write('-------------------\ninput chars = \n {} "\npredicted chars = \n {} "\n'.format(input_chars,predict_input))
+model.load_weights('best_RNN_large_textdata_weights.hdf5')
+# TRAIN LSTM / LEARN TEXT
+#model.fit(X, y, batch_size=500, epochs=30, verbose=1)
+#model.save_weights('best_RNN_large_textdata_weights.hdf5')
+# TEST LSTM / GENERATE TEXT
+input_chars = input()
+predict_input = predict_next_chars(model,input_chars,num_to_predict = 100)
+print('-------------------\ninput chars = \n {} "\npredicted chars = \n {} "\n'.format(input_chars,predict_input))
