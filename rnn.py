@@ -43,9 +43,10 @@ def indices_to_chars(i):
     return chr(i + 96)
 
 def chars_to_indices(ch):
-    if ch == ' ':
-        return 0
-    return ord(ch) - 96
+    if 96 < ord(ch.lower()) < 123:
+        return ord(ch.lower()) - 96
+    return 0
+
 
 # CLEAN INPUT TEXT
 n = 28
@@ -64,6 +65,5 @@ model.load_weights('best_RNN_large_textdata_weights.hdf5')
 model.fit(X, y, batch_size=500, epochs=30, verbose=1)
 model.save_weights('best_RNN_large_textdata_weights.hdf5')
 # TEST LSTM / GENERATE TEXT
-input_chars = input()[-15:]
-predict_input = predict_next_chars(model,input_chars,num_to_predict = 100)
+predict_input = predict_next_chars(model,input()[-window_size:],num_to_predict = 100)
 print('-------------------\ninput chars = \n {} "\npredicted chars = \n {} "\n'.format(input_chars,predict_input))
