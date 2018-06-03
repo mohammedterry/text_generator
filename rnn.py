@@ -3,8 +3,8 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation, LSTM
 from keras.optimizers import RMSprop
 
-def cleaned_text(text):
-    return ' '.join(''.join([ch.lower() if 31 < ord(ch) < 128 else ' ' for ch in text]).split())
+def clean(text):
+    return ' '.join(''.join([ch.lower() if 64 < ord(ch) < 91 or 96 < ord(ch) < 123 else ' ' for ch in text]).split())
 
 def window_transform_text(text, window_size=100, step_size=5):
     inputs = [text[i:i+window_size] for i in range(0,len(text)-window_size,step_size)]
@@ -13,7 +13,7 @@ def window_transform_text(text, window_size=100, step_size=5):
 
 def encode_io_pairs(text,window_size=100,step_size=5):
     inputs, outputs = window_transform_text(text,window_size,step_size)
-    n = 96
+    n = 28
     X = np.zeros((len(inputs), window_size, n), dtype=np.bool)
     y = np.zeros((len(inputs), n), dtype=np.bool)
     for i, sentence in enumerate(inputs):
@@ -37,17 +37,19 @@ def predict_next_chars(model,input_chars,num_to_predict):
     return predicted_chars
 
 def indices_to_chars(i):
-    return chr(i + 32)
+    if i == 0:
+        return ' '
+    return chr(i + 96)
 
 def chars_to_indices(ch):
-    return ord(ch) - 32
+    return ord(ch) - 96
 
 # clean input text
-text = cleaned_text(open('twitter.txt').read())
-print ("\n{} ...\n\nthis corpus has: \n\t{} characters in total\n\t{} unique characters\n\t\t{}".format(text[:100],len(text),len(set(text)),set(text)))
+text = clean(open('twitter.txt').read())
+print ("\n{} ...\n\nthis corpus has: \n\t{} characters in total\n\t{} unique characters\n\t\t{}".format(text[:100],len(text),len(set(text)),sorted(list(set(text)))))
 X,y = encode_io_pairs(text)
 # build train and save LSTM
-n = 96
+n = 28
 model = Sequential()
 model.add(LSTM(200,input_shape=(100, n )))
 model.add(Dense(n))
