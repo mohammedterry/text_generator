@@ -50,7 +50,7 @@ def chars_to_indices(ch):
 # CLEAN INPUT TEXT
 text = clean(open('twitter.txt').read())
 print ("\n{} ...\n\nthis corpus has: \n\t{} characters in total\n\t{} unique characters\n\t\t{}".format(text[:100],len(text),len(set(text)),sorted(list(set(text)))))
-X,y = encode_io_pairs(text[:10000])
+X,y = encode_io_pairs(text[:100000])
 # TRAIN LSTM
 n = 28
 model = Sequential()
