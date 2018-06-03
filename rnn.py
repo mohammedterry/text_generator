@@ -55,7 +55,7 @@ print ("\n{} ...\n\nthis corpus has: \n\t{} characters in total\n\t{} unique cha
 X,y = encode_io_pairs(text,window_size)
 # CREATE LSTM
 model = Sequential()
-model.add(LSTM(200,input_shape=(100, n )))
+model.add(LSTM(200,input_shape=(window_size, n )))
 model.add(Dense(n))
 model.add(Activation("softmax"))
 model.compile(loss='categorical_crossentropy',optimizer=RMSprop(lr=.001,rho=.9,epsilon=1e-08,decay=.0))
