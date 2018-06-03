@@ -4,7 +4,7 @@ from keras.layers import Dense, Activation, LSTM
 from keras.optimizers import RMSprop
 
 def cleaned_text(text):
-    return ' '.join(''.join([ch.lower() for ch in text if 31 < ord(ch) < 128]).split())
+    return ' '.join(''.join([ch.lower() if 31 < ord(ch) < 128 else ' ' for ch in text]).split())
 
 def window_transform_text(text, window_size=100, step_size=5):
     inputs = [text[i:i+window_size] for i in range(0,len(text)-window_size,step_size)]
@@ -12,11 +12,10 @@ def window_transform_text(text, window_size=100, step_size=5):
     return inputs,outputs
 
 def encode_io_pairs(text,window_size=100,step_size=5):
-    chars = sorted(list(set(text)))
-    num_chars = len(chars)
     inputs, outputs = window_transform_text(text,window_size,step_size)
-    X = np.zeros((len(inputs), window_size, num_chars), dtype=np.bool)
-    y = np.zeros((len(inputs), num_chars), dtype=np.bool)
+    n = 96
+    X = np.zeros((len(inputs), window_size, n), dtype=np.bool)
+    y = np.zeros((len(inputs), n), dtype=np.bool)
     for i, sentence in enumerate(inputs):
         for t, char in enumerate(sentence):
             X[i, t, chars_to_indices(char)] = 1
@@ -48,9 +47,10 @@ text = cleaned_text(open('twitter.txt').read())
 print ("\n{} ...\n\nthis corpus has: \n\t{} characters in total\n\t{} unique characters\n\t\t{}".format(text[:100],len(text),len(set(text)),set(text)))
 X,y = encode_io_pairs(text)
 # build train and save LSTM
+n = 96
 model = Sequential()
-model.add(LSTM(200,input_shape=(100,len(set(text)))))
-model.add(Dense(num_chars))
+model.add(LSTM(200,input_shape=(100, n )))
+model.add(Dense(n))
 model.add(Activation("softmax"))
 model.compile(loss='categorical_crossentropy',optimizer=RMSprop(lr=.001,rho=.9,epsilon=1e-08,decay=.0))
 model.fit(X, y, batch_size=500, epochs=30, verbose=1)
