@@ -1,5 +1,5 @@
 # text_generator
-natural language generation using keras LSTM trained on twitter
+character-level natural language generator (RNN: LSTM) trained on twitter
 ![](https://raw.githubusercontent.com/mohammedterry/text_generator/master/example1.png)
 ...
 ![](https://raw.githubusercontent.com/mohammedterry/text_generator/master/example2.png)
