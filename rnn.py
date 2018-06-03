@@ -46,20 +46,20 @@ def chars_to_indices(ch):
         return 0
     return ord(ch) - 96
 
-# clean input text
+# CLEAN INPUT TEXT
 text = clean(open('twitter.txt').read())
 print ("\n{} ...\n\nthis corpus has: \n\t{} characters in total\n\t{} unique characters\n\t\t{}".format(text[:100],len(text),len(set(text)),sorted(list(set(text)))))
 X,y = encode_io_pairs(text)
-# build train and save LSTM
+# TRAIN LSTM
 n = 28
 model = Sequential()
 model.add(LSTM(200,input_shape=(100, n )))
 model.add(Dense(n))
 model.add(Activation("softmax"))
 model.compile(loss='categorical_crossentropy',optimizer=RMSprop(lr=.001,rho=.9,epsilon=1e-08,decay=.0))
-model.fit(X, y, batch_size=500, epochs=30, verbose=1)
+model.fit(X, y, batch_size=500, epochs=1, verbose=1)
 model.save_weights('best_RNN_large_textdata_weights.hdf5')
-# output predictions to textfile
+# GENERATE TEXT
 start_inds = [1,4,7]
 with open('RNN_output.txt', 'w') as f:
     model.load_weights('best_RNN_large_textdata_weights.hdf5')
