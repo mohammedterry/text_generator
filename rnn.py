@@ -66,4 +66,4 @@ model.fit(X, y, batch_size=500, epochs=30, verbose=1)
 model.save_weights('best_RNN_large_textdata_weights.hdf5')
 # TEST LSTM / GENERATE TEXT
 predict_input = predict_next_chars(model,input()[-window_size:],num_to_predict = 100)
-print('-------------------\ninput chars = \n {} "\npredicted chars = \n {} "\n'.format(input_chars,predict_input))
+print('-------------------\npredicted chars = \n {} "\n'.format(predict_input))
