@@ -1,6 +1,5 @@
 # text_generator
 character-level natural language generator (RNN: LSTM) trained on twitter
-![](https://raw.githubusercontent.com/mohammedterry/text_generator/master/twitter.png)
 ...
 ![](https://raw.githubusercontent.com/mohammedterry/text_generator/master/train.png)
 ...
